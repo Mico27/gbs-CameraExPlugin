@@ -1,6 +1,8 @@
-# GBS Camera Ex Plugin
+# gbs-CameraExPlugin
 
-An engine plugin for **GB Studio 4.3.0+** that extends the stock camera.
+**Version 1.0.0 — Requires GB Studio ≥ 4.3.0**
+
+An engine plugin that extends the stock GB Studio camera.
 
 | Feature | What it adds |
 |---|---|
@@ -9,155 +11,113 @@ An engine plugin for **GB Studio 4.3.0+** that extends the stock camera.
 | **Smooth transitions** | The camera eases towards its target instead of snapping. Changing the lock target, the camera offset or the deadzone all make the camera glide to its new position. |
 | **Direct line movement** | Camera travel can follow the true straight line between two points, alongside the stock horizontal-first / vertical-first / 45° diagonal routes. |
 
-The plugin adds **~2.0 KB of ROM**, **14 bytes of WRAM** and **no SRAM**.
+---
+
+## Table of Contents
+
+1. [Concepts](#concepts)
+2. [Project Setup](#project-setup)
+3. [Engine Settings](#engine-settings)
+4. [Size Limits and Restrictions](#size-limits-and-restrictions)
+5. [Events Reference](#events-reference)
+6. [Memory Footprint](#memory-footprint)
 
 ---
 
-## Events
-
-All events appear in the stock **Camera** group.
-
-| Event | Description |
-|---|---|
-| **Camera Lock On Actor** | Follow an actor picked from the scene. |
-| **Camera Lock On Actor By Index** | Follow the actor at a given scene index (player = 0), so the target can come from a variable. |
-| **Camera Lock On Multiple Actors** | Follow the median position of 2–4 actors, with a midpoint / average choice. |
-| **Camera Add Follow Target** | Append one more actor to the follow list without clearing it — use it to go past four targets, or to build the list in a loop. Up to 8 targets are kept. |
-| **Camera Lock On Player** | Clear the follow list and go back to the player. |
-| **Camera Set Smoothing** | Change the smoothing speed and path without touching the lock target. |
-| **Camera Move To (Extended)** | Move the camera to a position along a chosen path, with an optional re-lock once it arrives. |
-
-Every lock event also carries the stock **Lock Axis** and **Prevent Backtracking**
-fields, so it fully replaces `Camera Lock` rather than sitting beside it.
+## Concepts
 
 ### Path modes
 
 | Mode | Behaviour |
 |---|---|
 | **Direct line** | Travels along the true straight line between the two points. The minor axis advances proportionally to the major one, so a 3:1 move really looks 3:1. |
-| **Diagonal** | Each axis advances by the full speed independently — a 45° move until one axis arrives, then straight. This is the stock `Camera Move To` behaviour. |
+| **Diagonal** | Each axis advances by the full speed independently — a 45° move until one axis arrives, then straight. This is the stock *Camera Move To* behaviour. |
 | **Horizontal first** | Finish X, then Y. |
 | **Vertical first** | Finish Y, then X. |
 
 ### Smoothing
 
-Smoothing is a **speed in pixels per frame**, or *Instant*. Instant reproduces the
-stock camera exactly: every frame the camera snaps to the edge of the deadzone
-around its target. With a speed set, the camera moves at most that far per frame
-towards the same position, along the chosen path.
+Smoothing is a **speed in pixels per frame**, or *Instant*. Instant reproduces the stock camera exactly: every frame the camera snaps to the edge of the deadzone around its target. With a speed set, the camera moves at most that far per frame towards the same position, along the chosen path.
 
-Because smoothing is applied to the *final* camera position rather than to any one
-event, it covers every case at once:
+Because smoothing is applied to the *final* camera position rather than to any one event, it covers every case at once:
 
 - **Lock target changes** → the camera glides to the new actor.
-- **Camera offset changes** (`Camera Set Property`) → the camera glides to the new offset.
-- **Deadzone changes** (`Camera Set Property`) → the camera glides as the deadzone widens or narrows.
+- **Camera offset changes** (*Camera Set Property*) → the camera glides to the new offset.
+- **Deadzone changes** (*Camera Set Property*) → the camera glides as the deadzone widens or narrows.
 
-Smoothing and the follow list are **reset on every scene load**, exactly like the
-stock camera deadzone. The values they reset to come from the engine settings
-below, so a project-wide smooth camera needs no per-scene setup.
+### Follow list
+
+Locking onto multiple actors builds a follow list of up to 8 targets. *Camera Lock On Multiple Actors* replaces the list; *Camera Add Follow Target* appends to it, which is how you go past four targets or build the list in a loop. *Camera Lock On Player* clears it.
 
 ---
 
-## Engine settings
+## Project Setup
+
+1. For a project-wide smooth camera, set **Default smoothing speed** and **Default smoothing path** under [Engine Settings](#engine-settings) — no per-scene setup is then needed.
+2. To follow something other than the player, call one of the **Camera Lock On …** events from any script.
+3. Adjust smoothing at runtime with **Camera Set Smoothing**, or move the camera manually with **Camera Move To (Extended)**.
+
+Smoothing and the follow list are **reset on every scene load**, exactly like the stock camera deadzone. The values they reset to come from the engine settings.
+
+---
+
+## Engine Settings
 
 Found under **Settings → Engine → Camera Ex**.
 
-| Field | Default | Meaning |
+| Setting | Default | Description |
 |---|---|---|
-| `Enable smooth camera transitions` | on | Compiles the eased follow code. Turn off to save ROM if you only need the extra lock targets. |
-| `Enable multiple lock targets` | on | Compiles the median-of-several-actors code. Turn off to save ROM if you only ever lock onto one actor. |
-| `Default smoothing speed` | 0 | Slider, shown in pixels per frame (stored as subpixels, 32 = 1 pixel). 0 = instant, the stock behaviour. Re-applied on every scene load. |
-| `Default smoothing path` | Direct line | Dropdown: Direct line / Diagonal / Horizontal first / Vertical first. Re-applied on every scene load. |
+| **Enable smooth camera transitions** | on | Compiles the eased follow code. Turn off to save ROM if you only need the extra lock targets. |
+| **Enable multiple lock targets** | on | Compiles the median-of-several-actors code. Turn off to save ROM if you only ever lock onto one actor. |
+| **Default smoothing speed** | 0 | Slider in pixels per frame. 0 = instant, the stock behaviour. Re-applied on every scene load. |
+| **Default smoothing path** | Direct line | Direct line / Diagonal / Horizontal first / Vertical first. Re-applied on every scene load. |
 
 ---
 
-## Engine files
+## Size Limits and Restrictions
 
-The plugin overrides two stock files and adds two of its own:
+- The follow list holds a maximum of **8 targets**; further *Camera Add Follow Target* calls are ignored.
+- **Camera Lock On Multiple Actors** takes 2–4 actors from its own fields; use *Camera Add Follow Target* to go beyond four.
+- Smoothing and the follow list **reset on every scene load** — re-apply them in the scene's init script if a scene needs different values from the engine defaults.
+- This plugin also modifies the stock camera, as do **ScreenScrollPlugin** and **ContinuousScenePlugin**. Compatible variants are included and selected automatically when those plugins are installed alongside it; GB Studio will log that Camera Ex superseded their camera patch, which is expected. **MetaTilePlugin** needs no variant.
 
-```
-engine/
-  include/camera.h        ← override: stock content + the Camera Ex externs
-  include/camera_ex.h     ← new: follow list, smoothing state, camera_ex_reset()
-  include/vm_camera_ex.h  ← new: VM entry points
-  src/core/camera.c       ← override: stock globals, camera_update() delegates
-  src/core/camera_ex.c    ← new: follow target resolution, path stepping
-  src/core/vm_camera_ex.c ← new: VM entry points
-```
+---
 
-`camera.c` is deliberately thin — it only holds the stock globals and forwards
-`camera_update()` to `camera_ex_update()`. All the logic lives in `camera_ex.c`,
-which is byte-identical across every engineAlt variant.
+## Events Reference
 
-### Compatibility with other plugins
+All events appear in the stock **Camera** group. Every lock event also carries the stock **Lock Axis** and **Prevent Backtracking** fields, so it fully replaces *Camera Lock* rather than sitting beside it.
 
-`ScreenScrollPlugin` and `ContinuousScenePlugin` also modify `camera.c` / `camera.h`
-(they widen the camera coordinates to signed and skip the update while a scene
-transition is scrolling). `engineAlt` variants fold those changes in:
-
-| Installed alongside | Variant used |
+| Event | Description |
 |---|---|
-| — | `engine` |
-| `ScreenScrollPlugin` | `engineAlt/ScreenScrollPlugin` |
-| `ContinuousScenePlugin` | `engineAlt/ContinuousScenePlugin` |
-| `MetaTilePlugin` | no variant needed — it does not touch `camera.c` |
-| `ContinuousScenePlugin` + `MetaTilePlugin` | `engineAlt/ContinuousScenePlugin` |
-
-`plugin.json` sets `"order": 10` so Camera Ex is applied **after** those plugins and
-its `camera.c` wins. GB Studio will log that it superseded their camera patch — that
-is expected, the variant already contains their changes.
+| **Camera Lock On Actor** | Follow an actor picked from the scene. |
+| **Camera Lock On Actor By Index** | Follow the actor at a given scene index (player = 0), so the target can come from a variable. |
+| **Camera Lock On Multiple Actors** | Follow the median position of 2–4 actors, with a midpoint / average choice. |
+| **Camera Add Follow Target** | Append one more actor to the follow list without clearing it. Up to 8 targets are kept. |
+| **Camera Lock On Player** | Clear the follow list and go back to the player. |
+| **Camera Set Smoothing** | Change the smoothing speed and path without touching the lock target. |
+| **Camera Move To (Extended)** | Move the camera to a position along a chosen path, with an optional re-lock once it arrives. |
 
 ---
 
-## Example project
+## Media
 
-`CameraExPluginExample/` runs every event from the scene init script on a 40×36 tile
-map with four NPCs: lock onto a single actor, glide to another in a direct line,
-lock by index, follow the midpoint and then the average of several actors, change
-smoothing at runtime, and move the camera along each of the four paths.
-
-Build it with:
-
-```bash
-node "C:/Users/micka/Documents/gb-studio/out/cli/gb-studio-cli.js" make:rom CameraExPluginExample/CameraExPluginExample.gbsproj CameraExPluginExample/build/CameraExPluginExample.gb
-```
+An example project is included. It runs every event from the scene init script on a 40×36 tile map with four NPCs: lock onto a single actor, glide to another in a direct line, lock by index, follow the midpoint and then the average of several actors, change smoothing at runtime, and move the camera along each of the four paths.
 
 ---
 
-## Development
-
-Event files are sandboxed by GB Studio and cannot `require` a sibling module, so the
-shared field definitions and compile helpers are inlined into every event file.
-They are generated — edit `tools/genEvents.js` and re-run it rather than editing one
-copy:
-
-```bash
-node tools/genEvents.js src/CameraExPlugin/events
-```
-
-The `engineAlt` variants differ from `engine/` only in `camera.c` and `camera.h`;
-after changing `camera_ex.c`, `camera_ex.h`, `vm_camera_ex.c` or `vm_camera_ex.h`,
-copy them across:
-
-```bash
-node tools/syncAlt.js
-```
-
----
-
-## Memory footprint
+## Memory Footprint
 
 Measured against a stock GB Studio 4.3.0 build:
 
-| | Bytes |
+| | Cost |
 |---|---|
-| ROM — `camera.c` (was 468 stock, now 71) | −397 |
-| ROM — `camera_ex.c` | 2011 |
-| ROM — `vm_camera_ex.c` | 397 |
-| **ROM total added** | **2011** |
-| WRAM — follow list (8) + state (4) + engine field defaults (2) | 14 |
-| SRAM | 0 |
+| WRAM | +14 bytes (follow list 8, state 4, engine field defaults 2) |
+| ROM | +2,011 bytes |
+| SRAM | 0 bytes |
+
+Turning off either engine setting reduces the ROM cost.
+
+---
 
 ## License
 
