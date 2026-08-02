@@ -1,0 +1,570 @@
+{
+  "_resourceType": "scene",
+  "id": "6f94c75c-83e7-4bfc-ad9d-c7df73390aae",
+  "_index": 0,
+  "name": "Camera Ex Test",
+  "backgroundId": "3a1c7f20-4b6e-4d21-9a51-8c7d2e0f1b44",
+  "tilesetId": "",
+  "width": 40,
+  "height": 36,
+  "type": "TOPDOWN",
+  "colorModeOverride": "none",
+  "paletteIds": [],
+  "spritePaletteIds": [],
+  "collisions": "",
+  "autoFadeSpeed": 1,
+  "symbol": "scene_camera_ex",
+  "x": 256,
+  "y": 256,
+  "script": [
+    {
+      "command": "EVENT_COMMENT",
+      "args": {
+        "text": "=== CameraExPlugin Example Project ===",
+        "__collapse": true
+      },
+      "id": "ca54891a-fd9e-4d40-b84d-3a0cabf1d230"
+    },
+    {
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": [
+          "Camera Ex demo.\nEvery event runs\non scene init."
+        ],
+        "__section": "text"
+      },
+      "id": "3854e066-cfda-4241-b2a8-4d77ab88949c"
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "1. Lock on another actor (instant)",
+        "__collapse": false
+      },
+      "id": "52683260-dba2-4f61-a7d5-a7a338f4c4e4",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_LOCK_ACTOR",
+            "args": {
+              "actorId": "2c0379ec-d49a-490a-848a-2e32d475cf47",
+              "smoothSpeed": 0,
+              "pathMode": 3,
+              "axis": [
+                "x",
+                "y"
+              ],
+              "preventScroll": []
+            },
+            "id": "65b405d6-26f7-474f-ba07-50694921f16e"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Locked on NPC_A\ninstantly."
+              ],
+              "__section": "text"
+            },
+            "id": "7a917351-d924-40f8-b256-056bcb489ce8"
+          },
+          {
+            "command": "EVENT_WAIT",
+            "args": {
+              "frames": {
+                "type": "number",
+                "value": 60
+              },
+              "units": "frames"
+            },
+            "id": "2a865e9e-9ac7-40be-97eb-8d5ebea47eb9"
+          }
+        ]
+      }
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "2. Lock on another actor (smooth, direct line)",
+        "__collapse": false
+      },
+      "id": "606bad72-c263-4e02-9b6e-29baf69ead10",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_LOCK_ACTOR",
+            "args": {
+              "actorId": "7ffb9a4d-294c-46b8-b8de-bcfb1d63f199",
+              "smoothSpeed": 1,
+              "pathMode": 3,
+              "axis": [
+                "x",
+                "y"
+              ],
+              "preventScroll": []
+            },
+            "id": "2c8737cd-8c3b-405e-b967-bd18d1ffb7fb"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Gliding to NPC_D\nin a direct line."
+              ],
+              "__section": "text"
+            },
+            "id": "9db2a21d-4ada-44b0-a0ce-74c67f57ecb3"
+          },
+          {
+            "command": "EVENT_WAIT",
+            "args": {
+              "frames": {
+                "type": "number",
+                "value": 180
+              },
+              "units": "frames"
+            },
+            "id": "feb286dc-6fbd-4147-a2e9-5378f199027f"
+          }
+        ]
+      }
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "3. Lock on actor by index (smooth, horizontal first)",
+        "__collapse": false
+      },
+      "id": "8c658fd6-cf50-463f-92cc-e3708ebf524b",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_LOCK_ACTOR_BY_INDEX",
+            "args": {
+              "actorIndex": {
+                "type": "number",
+                "value": 1
+              },
+              "smoothSpeed": 2,
+              "pathMode": 1,
+              "axis": [
+                "x",
+                "y"
+              ],
+              "preventScroll": []
+            },
+            "id": "4f57bf56-bdf6-4e28-a3bd-6ce6b58674b2"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Actor index 1,\nhorizontal first."
+              ],
+              "__section": "text"
+            },
+            "id": "aadfc0f3-77b0-499f-a97a-fdaa3c86aea2"
+          },
+          {
+            "command": "EVENT_WAIT",
+            "args": {
+              "frames": {
+                "type": "number",
+                "value": 180
+              },
+              "units": "frames"
+            },
+            "id": "6c87dd0c-4192-4b41-bdcc-67bc5faf016c"
+          }
+        ]
+      }
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "4. Lock on the median of four actors",
+        "__collapse": false
+      },
+      "id": "5b895001-c49b-476a-b4d0-256f702ed5c9",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_LOCK_ACTORS",
+            "args": {
+              "targetCount": 4,
+              "median": 0,
+              "actor0": "2c0379ec-d49a-490a-848a-2e32d475cf47",
+              "actor1": "cb110629-a87a-4498-9d42-95e21ab69498",
+              "actor2": "ba67a3d1-f856-498e-8e45-7a8ed937976a",
+              "actor3": "7ffb9a4d-294c-46b8-b8de-bcfb1d63f199",
+              "smoothSpeed": 1,
+              "pathMode": 3,
+              "axis": [
+                "x",
+                "y"
+              ],
+              "preventScroll": []
+            },
+            "id": "d5b51ebd-a1d5-4e39-b50e-5d199631a22e"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Midpoint of all\nfour NPCs."
+              ],
+              "__section": "text"
+            },
+            "id": "8ad0a9eb-8c31-4d70-9de6-3fa3af8142eb"
+          },
+          {
+            "command": "EVENT_WAIT",
+            "args": {
+              "frames": {
+                "type": "number",
+                "value": 180
+              },
+              "units": "frames"
+            },
+            "id": "5d6f728d-ef3a-495c-ba40-2de614ac968f"
+          }
+        ]
+      }
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "5. Average instead of midpoint, plus an extra target",
+        "__collapse": false
+      },
+      "id": "2a3ce8b2-cb55-42a7-91f1-98c7e2842e02",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_LOCK_ACTORS",
+            "args": {
+              "targetCount": 3,
+              "median": 1,
+              "actor0": "2c0379ec-d49a-490a-848a-2e32d475cf47",
+              "actor1": "cb110629-a87a-4498-9d42-95e21ab69498",
+              "actor2": "ba67a3d1-f856-498e-8e45-7a8ed937976a",
+              "smoothSpeed": 1,
+              "pathMode": 0,
+              "axis": [
+                "x",
+                "y"
+              ],
+              "preventScroll": []
+            },
+            "id": "9d6b0944-ba70-468a-b3f9-ab0a6a202971"
+          },
+          {
+            "command": "EVENT_CAMERA_EX_ADD_TARGET",
+            "args": {
+              "useIndex": false,
+              "actorId": "7ffb9a4d-294c-46b8-b8de-bcfb1d63f199"
+            },
+            "id": "80d17723-f1e6-4e8c-9e7d-2583daaf2255"
+          },
+          {
+            "command": "EVENT_CAMERA_EX_ADD_TARGET",
+            "args": {
+              "useIndex": true,
+              "actorIndex": {
+                "type": "number",
+                "value": 0
+              }
+            },
+            "id": "23a0ec9b-2130-4fd1-a312-2cbe9f5aebcf"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Average of five\ntargets."
+              ],
+              "__section": "text"
+            },
+            "id": "150354ef-8954-4dd1-a986-5eef90868268"
+          },
+          {
+            "command": "EVENT_WAIT",
+            "args": {
+              "frames": {
+                "type": "number",
+                "value": 180
+              },
+              "units": "frames"
+            },
+            "id": "5db0b557-f032-4d2b-a061-1a85a26cff46"
+          }
+        ]
+      }
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "6. Change smoothing on the fly",
+        "__collapse": false
+      },
+      "id": "bf337d40-286f-4c7e-baed-30b3e0e5584b",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_SET_SMOOTHING",
+            "args": {
+              "smoothSpeed": 0.25,
+              "pathMode": 3
+            },
+            "id": "d61b2954-860c-462e-bab8-5d10b17cb69f"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Slow smoothing."
+              ],
+              "__section": "text"
+            },
+            "id": "e52754e2-bef7-4b3c-bee7-803ca0f41334"
+          },
+          {
+            "command": "EVENT_WAIT",
+            "args": {
+              "frames": {
+                "type": "number",
+                "value": 120
+              },
+              "units": "frames"
+            },
+            "id": "a586807f-cd59-4cb8-a25b-119eca5d5d85"
+          },
+          {
+            "command": "EVENT_CAMERA_EX_SET_SMOOTHING",
+            "args": {
+              "smoothSpeed": 0,
+              "pathMode": 3
+            },
+            "id": "3b352d8d-4424-48f2-88ef-768f6ff8db2d"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Smoothing off."
+              ],
+              "__section": "text"
+            },
+            "id": "9e2fee85-eba3-4f6f-adfd-e4cff4cefb0b"
+          },
+          {
+            "command": "EVENT_WAIT",
+            "args": {
+              "frames": {
+                "type": "number",
+                "value": 60
+              },
+              "units": "frames"
+            },
+            "id": "a37df7d7-2b03-486b-982f-c12985d72a4a"
+          }
+        ]
+      }
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "7. Move to a position in a direct line",
+        "__collapse": false
+      },
+      "id": "91aad88d-6611-4a41-ada3-0d4fc53bc445",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_MOVE_TO",
+            "args": {
+              "x": {
+                "type": "number",
+                "value": 0
+              },
+              "y": {
+                "type": "number",
+                "value": 0
+              },
+              "units": "tiles",
+              "speed": 1,
+              "pathMode": 3,
+              "relock": false
+            },
+            "id": "92e8daed-ce0f-49d6-9bfb-73c87006100d"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Direct line to\nthe top left."
+              ],
+              "__section": "text"
+            },
+            "id": "ad1b5559-a9e1-4197-b79c-73136cbd6602"
+          },
+          {
+            "command": "EVENT_CAMERA_EX_MOVE_TO",
+            "args": {
+              "x": {
+                "type": "number",
+                "value": 20
+              },
+              "y": {
+                "type": "number",
+                "value": 18
+              },
+              "units": "tiles",
+              "speed": 2,
+              "pathMode": 3,
+              "relock": false
+            },
+            "id": "8ca1971f-6eba-4f00-bf00-fe66abec250e"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Direct line back."
+              ],
+              "__section": "text"
+            },
+            "id": "0074c95a-4da9-4c33-a8d1-f8a214dfc64f"
+          },
+          {
+            "command": "EVENT_CAMERA_EX_MOVE_TO",
+            "args": {
+              "x": {
+                "type": "number",
+                "value": 0
+              },
+              "y": {
+                "type": "number",
+                "value": 18
+              },
+              "units": "tiles",
+              "speed": 2,
+              "pathMode": 1,
+              "relock": false
+            },
+            "id": "243ed9a1-b594-4950-872b-5cd1cd962f60"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Horizontal first."
+              ],
+              "__section": "text"
+            },
+            "id": "7c99f69a-6568-4a6e-8106-b98614981594"
+          },
+          {
+            "command": "EVENT_CAMERA_EX_MOVE_TO",
+            "args": {
+              "x": {
+                "type": "number",
+                "value": 10
+              },
+              "y": {
+                "type": "number",
+                "value": 0
+              },
+              "units": "tiles",
+              "speed": 2,
+              "pathMode": 2,
+              "relock": false
+            },
+            "id": "208e653e-135e-4409-853a-6d1b9d0d066d"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Vertical first."
+              ],
+              "__section": "text"
+            },
+            "id": "a14cf5e1-4c12-4b4e-9298-9db23a23769b"
+          },
+          {
+            "command": "EVENT_CAMERA_EX_MOVE_TO",
+            "args": {
+              "x": {
+                "type": "number",
+                "value": 4
+              },
+              "y": {
+                "type": "number",
+                "value": 4
+              },
+              "units": "tiles",
+              "speed": 2,
+              "pathMode": 0,
+              "relock": true,
+              "axis": [
+                "x",
+                "y"
+              ],
+              "preventScroll": []
+            },
+            "id": "c29aae81-953d-4e3e-b04b-5447af0bd337"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Diagonal, then\nre-lock."
+              ],
+              "__section": "text"
+            },
+            "id": "b930d4dc-96f5-40e2-a91a-72d8b9326a26"
+          }
+        ]
+      }
+    },
+    {
+      "command": "EVENT_GROUP",
+      "args": {
+        "__label": "8. Back to the player",
+        "__collapse": false
+      },
+      "id": "9b107817-df4c-4808-a326-12a4f33d9552",
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CAMERA_EX_LOCK_PLAYER",
+            "args": {
+              "smoothSpeed": 1,
+              "pathMode": 3,
+              "axis": [
+                "x",
+                "y"
+              ],
+              "preventScroll": []
+            },
+            "id": "66eecac6-a8d9-4519-bfa0-9b1791b787fe"
+          },
+          {
+            "command": "EVENT_TEXT",
+            "args": {
+              "text": [
+                "Following the\nplayer again.\nWalk around!"
+              ],
+              "__section": "text"
+            },
+            "id": "ea825187-eeb1-4982-bb47-932c2ed11438"
+          }
+        ]
+      }
+    }
+  ],
+  "playerHit1Script": [],
+  "playerHit2Script": [],
+  "playerHit3Script": []
+}

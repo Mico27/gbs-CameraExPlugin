@@ -1,0 +1,13 @@
+{
+  "_resourceType": "background",
+  "id": "3a1c7f20-4b6e-4d21-9a51-8c7d2e0f1b44",
+  "name": "camera_field",
+  "symbol": "bg_camera_field",
+  "tileColors": "",
+  "filename": "camera_field.png",
+  "width": 40,
+  "height": 36,
+  "imageWidth": 320,
+  "imageHeight": 288,
+  "autoColor": false
+}
