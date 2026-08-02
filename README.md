@@ -20,7 +20,9 @@ An engine plugin that extends the stock GB Studio camera.
 3. [Engine Settings](#engine-settings)
 4. [Size Limits and Restrictions](#size-limits-and-restrictions)
 5. [Events Reference](#events-reference)
-6. [Memory Footprint](#memory-footprint)
+6. [Media](#media)
+7. [Memory Footprint](#memory-footprint)
+8. [License](#license)
 
 ---
 
