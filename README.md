@@ -11,6 +11,10 @@ An engine plugin that extends the stock GB Studio camera.
 | **Smooth transitions** | The camera eases towards its target instead of snapping. Changing the lock target, the camera offset or the deadzone all make the camera glide to its new position. |
 | **Direct line movement** | Camera travel can follow the true straight line between two points, alongside the stock horizontal-first / vertical-first / 45° diagonal routes. |
 
+
+https://github.com/user-attachments/assets/d4908bc2-fdb5-4a8c-b5f6-5edab3a762cc
+
+
 ---
 
 ## Table of Contents
